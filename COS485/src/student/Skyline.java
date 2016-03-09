@@ -9,6 +9,7 @@ package student;
  */
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Skyline
 {
@@ -17,6 +18,20 @@ public class Skyline
 	// This is interesting, but not the correct solution to this problem.
 	public static ArrayList<Point> findSkyline(ArrayList<Point> input) 
 	{	
+	
+		if( input.size() == 2){
+			
+			Arrays.sort(input.toArray());
+			
+			
+		}else{
+			int size = input.size()/2;
+			sortLeft(input, 0, size);
+			sortRight(input, size, input.size());
+			//return findSkyline(sortLeft, SortRight);
+		}
+		
+		
 		Point p = input.get(0);
 		int minx = p.x;
 		int maxx = p.x;
@@ -33,9 +48,18 @@ public class Skyline
 		ArrayList<Point> output = new ArrayList<Point>();
 		output.add(new Point(minx, maxy));
 		output.add(new Point(maxx, miny));
-				
+
+		System.out.println(minx+" "+maxx+" "+miny+" "+maxy);
+		
+		
 		return output; 
 	}	
 
-  
+	public static ArrayList<Point> sortLeft(ArrayList<Point> input, int startIndex, int endIndex){
+		return sortLeft(input, startIndex, input.size()/2);
+	}
+	
+	public static ArrayList<Point> sortRight(ArrayList<Point> input, int startIndex, int endIndex){
+		return sortLeft(input, endIndex/2, endIndex);
+	}
 }
