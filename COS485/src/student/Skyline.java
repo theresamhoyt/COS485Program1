@@ -31,7 +31,7 @@ public class Skyline
 		else{
 
 			left = new ArrayList<Point>(input.subList(0, input.size()/2));
-			right = new ArrayList<Point>(input.subList(input.size()/2 + 1, input.size()));
+			right = new ArrayList<Point>(input.subList(input.size()/2, input.size()));
 			return mergeSkyline(findSkyline(left), findSkyline(right));
 		}
 
