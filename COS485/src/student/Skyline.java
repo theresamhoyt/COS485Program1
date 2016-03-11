@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Skyline
 {
 
+	// 
 	public static ArrayList<Point> findSkyline(ArrayList<Point> input) 
 	{		
 		ArrayList<Point> left, right;
@@ -31,13 +32,12 @@ public class Skyline
 
 			left = new ArrayList<Point>(input.subList(0, input.size()/2));
 			right = new ArrayList<Point>(input.subList(input.size()/2 + 1, input.size()));
-			return mergeSkyline(left, right);
-
+			return mergeSkyline(findSkyline(left), findSkyline(right));
 		}
 
 	}	
 
-	
+
 	public static ArrayList<Point> mergeSkyline(ArrayList<Point> left, ArrayList<Point> right){
 		return left;
 	}
