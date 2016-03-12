@@ -71,22 +71,36 @@ public class Skyline
 		int i=0, j=0;
 		while( !skyline1.isEmpty() && !skyline2.isEmpty()){
 
-			if( skyline1.get(i).x < skyline2.get(j).x){
-				h1 = Math.max(skyline1.get(i).y, h2);
-				skyline1.get(i).y = h1;
-				output.add(skyline1.get(i));
-				hasHeight(output);
-				skyline1.remove(skyline1.get(i));
+			Point s1 = skyline1.get(i);
+			Point s2 = skyline2.get(j);
+
+
+			if( s1.x == s2.x){
+				Point p = new Point(s1.x, Math.max(s1.y, s2.y));
+				output.add(p);
+				h1=h2=s2.y;
+				skyline1.remove(s1);
+				skyline2.remove(s2);
+				removeRedundant(output);
+
+			}
+			else if(s1.x < s2.x){
+				Point a = new Point(s1.x, Math.max(h2, s1.y) );
+				output.add(a);
+				h1 = s1.y;
+				skyline1.remove(s1);
+				removeRedundant(output);
 
 			}else{
 
-				h2 = Math.min(h1, skyline2.get(j).y);
-				skyline2.get(j).y = h2;
-				output.add(skyline2.get(j));	
-				hasHeight(output);
-				skyline2.remove(skyline2.get(j));
-			}
+				Point b = new Point(s2.x, Math.max(h1, s2.y) );
+				output.add(b);
+				h2 = s2.y;
+				skyline2.remove(s2);
+				removeRedundant(output);
 
+
+			}
 		}
 
 
@@ -103,25 +117,29 @@ public class Skyline
 	// helper method to convert building list to points list
 	public static ArrayList<Point> toPoint(List<Building> building){
 		ArrayList<Point> building1 = new ArrayList<Point>();
-		building1.add(new Point(building.get(0).x1, building.get(0).y1));
-		building1.add(new Point(building.get(0).x2, building.get(0).y2));
+
+		for(int i=0; i<building.size(); i++){
+
+			building1.add(new Point(building.get(i).x1, building.get(i).y1));
+			building1.add(new Point(building.get(i).x2, building.get(i).y2));
+		}
+
 		return building1;		
 	}
 
 	// helper method to see if the height already exists
 	// removes the previous index becasue thats where 
 	//  the occurence would be 
-	public static void hasHeight(ArrayList<Point> alp){
-		
+	public static void removeRedundant(ArrayList<Point> alp){
+
 		int size = alp.size()-1;
-		
+
 		if(alp.size() > 1)
-			if( alp.get(size).y == alp.get(size-1).y )
-				alp.remove(size-1);
-
-
+	
+			if( alp.get(size).y == alp.get(size-1).y ){
+				alp.remove(size);
+			}
 	}
-
 
 	// helper method to print content
 	public static void printList(ArrayList<Building> building) {
