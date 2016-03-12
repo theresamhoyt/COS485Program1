@@ -2,6 +2,7 @@ package student;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /* 
@@ -30,8 +31,6 @@ public class Skyline
 			building.add(p);
 		}
 
-		printList(building);
-
 		ArrayList<Point> left, right;
 
 		// Base Case: One Building
@@ -47,22 +46,58 @@ public class Skyline
 		else{
 
 			int mid = building.size()/2;
-
 			left = findSkyline(toPoint(building.subList(0, mid)));
 			right = findSkyline(toPoint(building.subList(mid, building.size())));
-			return mergeSkyline(findSkyline(left), findSkyline(right));
+			return mergeSkyline(left, right);
 		}
 
 	}	
 
 
 	// merges the two skylines together
-	public static ArrayList<Point> mergeSkyline(ArrayList<Point> findSkyline, ArrayList<Point> findSkyline2) {
+	public static ArrayList<Point> mergeSkyline(ArrayList<Point> skyline1, ArrayList<Point> skyline2) {
+
+		int h1 = 0, h2 = 0;
+		ArrayList<Point> output = new ArrayList<Point>();
+
+		//	iterate through the two skylines
+		//	compare the first elements of the skyline
+		//	grab the one that comes first
+		//	calculate the height for that point
+		//	add that point to the retuen list
+		// move to the next point in the sky lists
+		// if you reach the end of one list, add all the points of the other list
+
+		int i=0, j=0;
+		while( !skyline1.isEmpty() && !skyline2.isEmpty()){
+
+			if( skyline1.get(i).x < skyline2.get(j).x){
+				h1 = Math.max(skyline1.get(i).y, h2);
+				skyline1.get(i).y = h1;
+				output.add(skyline1.get(i));
+				hasHeight(output);
+				skyline1.remove(skyline1.get(i));
+
+			}else{
+
+				h2 = Math.min(h1, skyline2.get(j).y);
+				skyline2.get(j).y = h2;
+				output.add(skyline2.get(j));	
+				hasHeight(output);
+				skyline2.remove(skyline2.get(j));
+			}
+
+		}
 
 
+		if(skyline1.isEmpty())
+			output.addAll(skyline2);
+
+		if(skyline2.isEmpty())
+			output.addAll(skyline1);
 
 
-		return null;
+		return output;
 	}
 
 	// helper method to convert building list to points list
@@ -72,6 +107,21 @@ public class Skyline
 		building1.add(new Point(building.get(0).x2, building.get(0).y2));
 		return building1;		
 	}
+
+	// helper method to see if the height already exists
+	// removes the previous index becasue thats where 
+	//  the occurence would be 
+	public static void hasHeight(ArrayList<Point> alp){
+		
+		int size = alp.size()-1;
+		
+		if(alp.size() > 1)
+			if( alp.get(size).y == alp.get(size-1).y )
+				alp.remove(size-1);
+
+
+	}
+
 
 	// helper method to print content
 	public static void printList(ArrayList<Building> building) {
